@@ -40,7 +40,7 @@ Open `http://localhost:8288` to watch the workflow run step by step.
 
 ## Inngest dev UI
 
-![Inngest dev UI showing the 3-step RFQ workflow](docs/inngest.png)
+![Inngest dev UI showing the 3-step RFQ workflow](docs/ingest.png)
 
 ## Key files
 
