@@ -38,6 +38,10 @@ curl -X POST http://localhost:3001/rfq \
 
 Open `http://localhost:8288` to watch the workflow run step by step.
 
+## Inngest dev UI
+
+![Inngest dev UI showing the 3-step RFQ workflow](docs/inngest.png)
+
 ## Key files
 
 - `src/server.ts` — Express server, Inngest serve handler, POST /rfq route
