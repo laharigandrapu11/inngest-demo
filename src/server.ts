@@ -19,7 +19,7 @@ app.use(
 app.post("/rfq", async (req, res) => {
   const { partNumber, quantity, material } = req.body;
 
-  if (!partNumber || !quantity || !material) {
+  if (!partNumber || !quantity || quantity <= 0 || !material) {
     return res.status(400).json({
       error: "Missing required fields: partNumber, quantity, material",
     });
