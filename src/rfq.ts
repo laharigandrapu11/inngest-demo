@@ -1,7 +1,6 @@
 import { Inngest } from "inngest";
 import { v4 as uuidv4 } from "uuid";
 
-// Create the Inngest client — connects to the dev server at localhost:8288
 export const inngest = new Inngest({ id: "rfq-demo" });
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -25,14 +24,19 @@ const BASE_PRICE: Record<Material, number> = {
 // ─── Inngest function: processRfq ─────────────────────────────────────────────
 
 export const processRfq = inngest.createFunction(
-  { id: "process-rfq", name: "Process RFQ", retries: 0 },
+  {
+    id: "process-rfq",
+    name: "Process RFQ",
+    retries: 3,
+    concurrency: { limit: 10 },
+  },
   { event: "rfq/submitted" },
   async ({ event, step }) => {
     const data = event.data as RfqEventData;
 
     // ── Step 1: Parse the RFQ ─────────────────────────────────────────────────
     const parsed = await step.run("parse-rfq", async () => {
-      await sleep(1000); // Simulate parsing/validation service
+      await sleep(1000);
 
       if (!data.partNumber || data.partNumber.trim() === "") {
         throw new Error("partNumber is required");
@@ -55,7 +59,7 @@ export const processRfq = inngest.createFunction(
 
     // ── Step 2: Check Inventory ───────────────────────────────────────────────
     const inventory = await step.run("check-inventory", async () => {
-      await sleep(2000); // Simulate ERP/DB query
+      await sleep(2000);
 
       const inStock = parsed.quantity <= 50;
       return {
@@ -67,7 +71,7 @@ export const processRfq = inngest.createFunction(
 
     // ── Step 3: Generate Quote ────────────────────────────────────────────────
     const quote = await step.run("generate-quote", async () => {
-      await sleep(1000); // Simulate pricing engine
+      await sleep(1000);
 
       const unitPrice = BASE_PRICE[parsed.material] * (inventory.inStock ? 1.0 : 1.15);
       const totalPrice = unitPrice * parsed.quantity;

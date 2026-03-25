@@ -27,6 +27,7 @@ app.post("/rfq", async (req, res) => {
 
   const result = await inngest.send({
     name: "rfq/submitted",
+    id: `rfq-${partNumber}-${quantity}-${material}`,
     data: { partNumber, quantity, material },
   });
 
